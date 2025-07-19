@@ -162,6 +162,7 @@
         
         .seat-types-table {
             overflow-x: auto;
+            min-width: 100%;
         }
         
         .table {
@@ -214,7 +215,15 @@
         }
         
         .actions-cell {
-            width: 120px;
+            width: 250px;
+            min-width: 250px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            flex-wrap: nowrap;
         }
         
         .status-badge {
@@ -242,8 +251,9 @@
         }
         
         .btn-sm {
-            font-size: 0.875rem;
-            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            padding: 0.375rem 0.5rem;
+            white-space: nowrap;
         }
         
         .btn-edit {
@@ -257,9 +267,35 @@
             text-decoration: none;
         }
         
+        .btn-duplicate {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .btn-duplicate:hover {
+            background-color: #059669;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .btn-delete:hover {
+            background-color: #dc2626;
+            color: white;
+            text-decoration: none;
+        }
+        
         .text-muted {
             color: #9ca3af;
             font-size: 0.875rem;
+        }
+        
+        .small {
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -319,10 +355,26 @@
                                 <span th:if="${!seatType.isBooked && !seatType.deleted}" class="status-badge status-available">Available</span>
                             </td>
                             <td class="actions-cell">
-                                <div th:if="${!seatType.deleted}">
+                                <div th:if="${!seatType.deleted}" class="action-buttons">
                                     <a th:href="@{/seat-types/{id}/edit(id=${seatType.id})}" class="btn btn-sm btn-edit">Edit</a>
+                                    
+                                    <form th:action="@{/seat-types/{id}/duplicate(id=${seatType.id})}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-duplicate" 
+                                                title="Create a copy of this seat type">Duplicate</button>
+                                    </form>
+                                    
+                                    <form th:action="@{/seat-types/{id}/delete(id=${seatType.id})}" method="post" 
+                                          style="display: inline;" 
+                                          th:unless="${seatType.isBooked}"
+                                          onsubmit="return confirm('Are you sure you want to delete this seat type? This action cannot be undone.')">
+                                        <button type="submit" class="btn btn-sm btn-delete" 
+                                                title="Delete this seat type">Delete</button>
+                                    </form>
+                                    
+                                    <span th:if="${seatType.isBooked}" class="text-muted small" 
+                                          title="Cannot delete - seat type is currently in use">In Use</span>
                                 </div>
-                                <div th:if="${seatType.deleted}" class="text-muted">-</div>
+                                <div th:if="${seatType.deleted}" class="text-muted">Deleted</div>
                             </td>
                         </tr>
                     </tbody>

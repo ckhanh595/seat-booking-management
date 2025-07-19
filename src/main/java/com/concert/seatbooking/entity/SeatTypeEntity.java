@@ -63,4 +63,19 @@ public class SeatTypeEntity {
         this.seatTypeName = seatTypeName;
         this.workerMemo = workerMemo;
     }
+    
+    public void markAsDeleted() {
+        this.deleted = true;
+    }
+    
+    @Builder(builderMethodName = "duplicateBuilder", buildMethodName = "buildDuplicate")
+    public SeatTypeEntity(@NonNull String seatTypeCode, 
+                          @NonNull String seatTypeName, 
+                          String workerMemo) {
+        this.seatTypeCode = seatTypeCode;
+        this.seatTypeName = seatTypeName;
+        this.workerMemo = workerMemo != null ? workerMemo : "";
+        this.deleted = false;
+        this.isBooked = false;
+    }
 }

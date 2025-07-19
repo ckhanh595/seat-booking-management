@@ -120,4 +120,51 @@ public class SeatTypeController {
             return "redirect:/seat-types";
         }
     }
+
+    @PostMapping("/{id}/duplicate")
+    public String duplicateSeatType(@PathVariable Long id,
+                                    Authentication authentication,
+                                    RedirectAttributes redirectAttributes) {
+        try {
+            var duplicatedSeatType = seatTypeService.duplicateSeatType(id, authentication);
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    String.format("Seat type duplicated successfully. New seat type '%s' created with code %s",
+                            duplicatedSeatType.getSeatTypeName(), duplicatedSeatType.getSeatTypeCode()));
+
+            return "redirect:/seat-types";
+
+        } catch (ValidationException | NotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/seat-types";
+        } catch (Exception e) {
+            log.error("Error duplicating seat type {}", id, e);
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "An error occurred while duplicating the seat type. Please try again.");
+            return "redirect:/seat-types";
+        }
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteSeatType(@PathVariable Long id,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            seatTypeService.deleteSeatType(id, authentication);
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Seat type deleted successfully");
+
+            return "redirect:/seat-types";
+
+        } catch (ValidationException | NotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/seat-types";
+        } catch (Exception e) {
+            log.error("Error deleting seat type {}", id, e);
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "An error occurred while deleting the seat type. Please try again.");
+            return "redirect:/seat-types";
+        }
+    }
 }

@@ -16,4 +16,8 @@ public interface SeatTypeService {
     SeatTypeResponse getSeatTypeById(Long id);
 
     SeatTypeResponse updateSeatType(Long id, UpdateSeatTypeRequest request, Authentication authentication);
+    
+    SeatTypeResponse duplicateSeatType(Long id, Authentication authentication);
+    
+    void deleteSeatType(Long id, Authentication authentication);
 }
