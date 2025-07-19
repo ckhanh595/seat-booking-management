@@ -141,6 +141,126 @@
         .empty-state p {
             margin-bottom: 1.5rem;
         }
+        
+        .summary-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .summary-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-section p {
+            color: #64748b;
+            margin: 0;
+        }
+        
+        .seat-types-table {
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        
+        .table th {
+            background-color: #f8fafc;
+            color: #374151;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 0.875rem;
+        }
+        
+        .table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        
+        .table tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .deleted-row {
+            opacity: 0.6;
+            background-color: #fef2f2 !important;
+        }
+        
+        .deleted-row:hover {
+            background-color: #fef2f2 !important;
+        }
+        
+        .code-cell {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #22c55e;
+            width: 80px;
+        }
+        
+        .memo-cell {
+            max-width: 200px;
+            word-wrap: break-word;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .actions-cell {
+            width: 120px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-available {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-booked {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-deleted {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .btn-sm {
+            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .btn-edit {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #2563eb;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .text-muted {
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -167,10 +287,46 @@
             <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
             <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
             
-            <div class="empty-state">
-                <h3>Seat Types Management</h3>
-                <p>This section will display all seat types when the full CRUD functionality is implemented.</p>
-                <p>Currently, only the create functionality is available for administrators.</p>
+            <div class="summary-section">
+                <h3>Summary</h3>
+                <p>Total seat type patterns: <strong th:text="${totalCount}">0</strong></p>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(seatTypes)}" class="empty-state">
+                <h3>No Seat Types Found</h3>
+                <p>No seat types have been created yet. Create your first seat type to get started.</p>
+            </div>
+            
+            <div th:unless="${#lists.isEmpty(seatTypes)}" class="seat-types-table">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Worker Memo</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="seatType : ${seatTypes}" th:class="${seatType.deleted} ? 'deleted-row' : ''">
+                            <td class="code-cell" th:text="${seatType.seatTypeCode}">01</td>
+                            <td th:text="${seatType.seatTypeName}">VIP Seat</td>
+                            <td class="memo-cell" th:text="${seatType.workerMemo}">Premium seating area</td>
+                            <td>
+                                <span th:if="${seatType.deleted}" class="status-badge status-deleted">Deleted</span>
+                                <span th:if="${seatType.isBooked && !seatType.deleted}" class="status-badge status-booked">Booked</span>
+                                <span th:if="${!seatType.isBooked && !seatType.deleted}" class="status-badge status-available">Available</span>
+                            </td>
+                            <td class="actions-cell">
+                                <div th:if="${!seatType.deleted}">
+                                    <a th:href="@{/seat-types/{id}/edit(id=${seatType.id})}" class="btn btn-sm btn-edit">Edit</a>
+                                </div>
+                                <div th:if="${seatType.deleted}" class="text-muted">-</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>

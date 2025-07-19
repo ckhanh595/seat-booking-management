@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' - Concert Seat Booking'">Edit Seat Type - Concert Seat Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-btn, .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        .logout-btn:hover, .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .main-content {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        
+        .breadcrumb a {
+            color: #22c55e;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-subtitle {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-section {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-section h3 {
+            color: #16a34a;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            color: #15803d;
+            font-size: 0.875rem;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-label {
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            background-color: #fff;
+            font-family: inherit;
+        }
+        
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .field-error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .alert-error {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Concert Seat Booking Management</h1>
+        <div class="user-info">
+            <a href="/dashboard" class="back-btn">← Dashboard</a>
+            <span sec:authentication="name">User</span>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <nav class="breadcrumb">
+            <a href="/dashboard">Dashboard</a>
+            <span>→</span>
+            <a href="/seat-types">Seat Types</a>
+            <span>→</span>
+            <span>Edit</span>
+        </nav>
+        
+        <div class="form-card">
+            <h2 class="form-title">Edit Seat Type</h2>
+            <p class="form-subtitle">Update the name and worker memo for this seat type</p>
+            
+            <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+            
+            <div class="info-section">
+                <h3>Seat Type Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Code:</span>
+                        <span th:text="${seatType.seatTypeCode}">01</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span th:if="${seatType.isBooked}">Booked</span>
+                        <span th:unless="${seatType.isBooked}">Available</span>
+                    </div>
+                </div>
+            </div>
+            
+            <form method="post" th:object="${updateSeatTypeRequest}">
+                <div class="form-group">
+                    <label for="seatTypeName" class="form-label">Seat Type Name *</label>
+                    <input type="text" 
+                           id="seatTypeName" 
+                           th:field="*{seatTypeName}"
+                           class="form-input" 
+                           placeholder="Enter seat type name (max 30 characters)" 
+                           maxlength="30"
+                           required>
+                    <div th:if="${#fields.hasErrors('seatTypeName')}" class="field-error" th:errors="*{seatTypeName}"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="workerMemo" class="form-label">Worker Memo</label>
+                    <textarea id="workerMemo" 
+                              th:field="*{workerMemo}"
+                              class="form-textarea" 
+                              placeholder="Enter any notes or comments for internal use (max 500 characters)" 
+                              maxlength="500"
+                              rows="4"></textarea>
+                    <div th:if="${#fields.hasErrors('workerMemo')}" class="field-error" th:errors="*{workerMemo}"></div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="/seat-types" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Seat Type</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

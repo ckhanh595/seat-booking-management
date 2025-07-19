@@ -16,8 +16,8 @@ import lombok.NonNull;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.concert.seatbooking.service.SeatTypeService.DEFAULT_SEAT_TYPE_NAME;
-import static com.concert.seatbooking.service.SeatTypeService.DEFAULT_WORKER_MEMO;
+import static com.concert.seatbooking.service.SeatTypeServiceImpl.DEFAULT_SEAT_TYPE_NAME;
+import static com.concert.seatbooking.service.SeatTypeServiceImpl.DEFAULT_WORKER_MEMO;
 
 @Entity
 @Table(name = "seat_types")
@@ -59,4 +59,8 @@ public class SeatTypeEntity {
         this.isBooked = false;
     }
 
+    public void update(@NonNull String seatTypeName, String workerMemo) {
+        this.seatTypeName = seatTypeName;
+        this.workerMemo = workerMemo;
+    }
 }

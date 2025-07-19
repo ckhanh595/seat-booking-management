@@ -18,8 +18,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
-    public String handleSecurityException(ValidationException ex, Model model, RedirectAttributes redirectAttributes) {
+    public String handleValidationException(ValidationException ex, Model model, RedirectAttributes redirectAttributes) {
         log.warn("Business exception occurred: {}", ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/seat-types";
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFoundException(NotFoundException ex, Model model, RedirectAttributes redirectAttributes) {
+        log.warn("Not found exception occurred: {}", ex.getMessage());
         redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         return "redirect:/seat-types";
     }
