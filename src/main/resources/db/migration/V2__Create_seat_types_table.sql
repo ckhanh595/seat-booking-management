@@ -7,6 +7,8 @@ CREATE TABLE seat_types (
     deleted NUMBER(1) DEFAULT 0 NOT NULL,
     is_booked NUMBER(1) DEFAULT 0 NOT NULL,
     version NUMBER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uk_seat_types_code UNIQUE (seat_type_code),
     CONSTRAINT ck_seat_types_deleted CHECK (deleted IN (0, 1)),
     CONSTRAINT ck_seat_types_is_booked CHECK (is_booked IN (0, 1))

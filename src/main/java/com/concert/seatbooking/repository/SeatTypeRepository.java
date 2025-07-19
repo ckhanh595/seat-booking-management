@@ -18,4 +18,6 @@ public interface SeatTypeRepository extends JpaRepository<SeatTypeEntity, Long> 
 
     Optional<SeatTypeEntity> findByIdAndDeletedFalse(Long id);
 
+    List<SeatTypeEntity> findByDeletedFalseAndIsBookedFalseOrderBySeatTypeCodeAsc();
+
 }

@@ -15,13 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "bookings")
 @Getter
 @NoArgsConstructor
-public class BookingEntity {
+public class BookingEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +33,6 @@ public class BookingEntity {
     @JoinColumn(name = "seat_type_id", nullable = false)
     private SeatTypeEntity seatType;
 
-    @Column(name = "booking_date", nullable = false)
-    private LocalDateTime bookingDate;
-
     @Column(name = "notes", length = 500)
     private String notes;
 
@@ -50,7 +45,6 @@ public class BookingEntity {
                          String notes) {
         this.user = user;
         this.seatType = seatType;
-        this.bookingDate = LocalDateTime.now();
         this.notes = notes;
     }
 

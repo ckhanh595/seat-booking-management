@@ -8,6 +8,8 @@ CREATE TABLE users (
     role VARCHAR2(50),
     enabled NUMBER(1) DEFAULT 1 NOT NULL,
     version NUMBER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uk_users_username UNIQUE (username),
     CONSTRAINT ck_users_enabled CHECK (enabled IN (0, 1)),
     CONSTRAINT ck_users_role CHECK (role IN ('SUPER_ADMIN', 'STAFF', 'CUSTOMER'))

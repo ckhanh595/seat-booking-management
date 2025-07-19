@@ -23,7 +23,7 @@ import static com.concert.seatbooking.service.SeatTypeServiceImpl.DEFAULT_WORKER
 @Table(name = "seat_types")
 @Getter
 @NoArgsConstructor
-public class SeatTypeEntity {
+public class SeatTypeEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +66,10 @@ public class SeatTypeEntity {
     
     public void markAsDeleted() {
         this.deleted = true;
+    }
+    
+    public void markAsBooked() {
+        this.isBooked = true;
     }
     
     @Builder(builderMethodName = "duplicateBuilder", buildMethodName = "buildDuplicate")

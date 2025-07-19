@@ -24,6 +24,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
                 .requestMatchers("/seat-types/**").hasAnyRole("SUPER_ADMIN", "STAFF")
+                .requestMatchers("/book-seats/**").hasRole("CUSTOMER")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

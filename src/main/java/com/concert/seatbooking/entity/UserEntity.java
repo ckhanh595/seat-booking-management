@@ -23,7 +23,7 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor
-public class UserEntity {
+public class UserEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

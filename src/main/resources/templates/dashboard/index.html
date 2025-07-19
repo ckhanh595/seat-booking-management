@@ -156,6 +156,16 @@
                 </a>
             </div>
         </div>
+        
+        <div sec:authorize="hasRole('CUSTOMER')" class="management-section">
+            <h3 class="section-title">Booking</h3>
+            <div class="management-links">
+                <a href="/book-seats" class="management-link">
+                    <h4>Book Seats</h4>
+                    <p>Browse and book available seat types for your concert experience</p>
+                </a>
+            </div>
+        </div>
     </main>
 </body>
 </html>
