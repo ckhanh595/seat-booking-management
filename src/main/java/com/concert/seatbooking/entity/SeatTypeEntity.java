@@ -59,22 +59,9 @@ public class SeatTypeEntity extends BaseEntity {
         this.isBooked = false;
     }
 
-    public void update(@NonNull String seatTypeName, String workerMemo) {
-        this.seatTypeName = seatTypeName;
-        this.workerMemo = workerMemo;
-    }
-    
-    public void markAsDeleted() {
-        this.deleted = true;
-    }
-    
-    public void markAsBooked() {
-        this.isBooked = true;
-    }
-    
     @Builder(builderMethodName = "duplicateBuilder", buildMethodName = "buildDuplicate")
-    public SeatTypeEntity(@NonNull String seatTypeCode, 
-                          @NonNull String seatTypeName, 
+    public SeatTypeEntity(@NonNull String seatTypeCode,
+                          @NonNull String seatTypeName,
                           String workerMemo) {
         this.seatTypeCode = seatTypeCode;
         this.seatTypeName = seatTypeName;
@@ -82,4 +69,18 @@ public class SeatTypeEntity extends BaseEntity {
         this.deleted = false;
         this.isBooked = false;
     }
+
+    public void update(@NonNull String seatTypeName, String workerMemo) {
+        this.seatTypeName = seatTypeName;
+        this.workerMemo = workerMemo;
+    }
+
+    public void markAsDeleted() {
+        this.deleted = true;
+    }
+
+    public void markAsBooked() {
+        this.isBooked = true;
+    }
+
 }
