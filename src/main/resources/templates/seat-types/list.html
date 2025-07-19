@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Concert Seat Booking</title>
+    <title th:text="${pageTitle} + ' - Concert Seat Booking'">Seat Types Management - Concert Seat Booking</title>
     <style>
         * {
             margin: 0;
@@ -38,7 +38,7 @@
             gap: 1rem;
         }
         
-        .logout-btn {
+        .logout-btn, .back-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -51,7 +51,7 @@
             font-family: inherit;
         }
         
-        .logout-btn:hover {
+        .logout-btn:hover, .back-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-1px);
         }
@@ -62,71 +62,84 @@
             margin: 0 auto;
         }
         
-        .welcome-card {
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        .content-card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 2rem;
         }
         
-        .welcome-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
-        }
-        
-        .welcome-subtitle {
-            color: #64748b;
-            font-size: 1rem;
-        }
-        
-        .management-section {
-            margin-top: 2rem;
-        }
-        
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #2d3748;
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
             margin-bottom: 1rem;
-        }
-        
-        .management-links {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        
-        .management-link {
-            display: block;
-            padding: 1.5rem;
-            text-decoration: none;
-            color: inherit;
-            border-left: 4px solid #22c55e;
-            transition: all 0.2s ease;
-        }
-        
-        .management-link:hover {
-            background-color: #f8f9fa;
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        .management-link h4 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
-        }
-        
-        .management-link p {
-            color: #64748b;
             font-size: 0.875rem;
-            line-height: 1.5;
-            margin: 0;
+        }
+        
+        .alert-success {
+            background-color: #f0fdf4;
+            color: #16a34a;
+            border-left: 4px solid #16a34a;
+        }
+        
+        .alert-error {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #64748b;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+        
+        .empty-state p {
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -134,6 +147,7 @@
     <header class="header">
         <h1>Concert Seat Booking Management</h1>
         <div class="user-info">
+            <a href="/dashboard" class="back-btn">← Dashboard</a>
             <span sec:authentication="name">User</span>
             <form th:action="@{/logout}" method="post" style="display: inline;">
                 <button type="submit" class="logout-btn">Logout</button>
@@ -142,18 +156,21 @@
     </header>
     
     <main class="main-content">
-        <div class="welcome-card">
-            <h2 class="welcome-title">Welcome to the Dashboard!</h2>
-            <p class="welcome-subtitle">You have successfully logged in to the Concert Seat Booking Management system.</p>
+        <div class="page-header">
+            <h2 class="page-title">Seat Types Management</h2>
+            <div sec:authorize="hasRole('SUPER_ADMIN')">
+                <a href="/seat-types/create" class="btn btn-primary">+ Create New Seat Type</a>
+            </div>
         </div>
         
-        <div sec:authorize="hasAnyRole('SUPER_ADMIN', 'STAFF')" class="management-section">
-            <h3 class="section-title">Management</h3>
-            <div class="management-links">
-                <a href="/seat-types" class="management-link">
-                    <h4>Seat Types Management</h4>
-                    <p>View and manage concert seat type patterns for booking system</p>
-                </a>
+        <div class="content-card">
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+            
+            <div class="empty-state">
+                <h3>Seat Types Management</h3>
+                <p>This section will display all seat types when the full CRUD functionality is implemented.</p>
+                <p>Currently, only the create functionality is available for administrators.</p>
             </div>
         </div>
     </main>

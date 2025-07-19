@@ -23,6 +23,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/login", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                .requestMatchers("/seat-types/**").hasAnyRole("SUPER_ADMIN", "STAFF")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

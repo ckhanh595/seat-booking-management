@@ -16,6 +16,9 @@ import lombok.NonNull;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.concert.seatbooking.service.SeatTypeService.DEFAULT_SEAT_TYPE_NAME;
+import static com.concert.seatbooking.service.SeatTypeService.DEFAULT_WORKER_MEMO;
+
 @Entity
 @Table(name = "seat_types")
 @Getter
@@ -47,13 +50,11 @@ public class SeatTypeEntity {
     @OneToMany(mappedBy = "seatType")
     private Set<BookingEntity> bookingEntities = new HashSet<>();
 
-    @Builder
-    public SeatTypeEntity(@NonNull String seatTypeCode,
-                          @NonNull String seatTypeName,
-                          String workerMemo) {
+    @Builder(builderMethodName = "defaultBuilder", buildMethodName = "buildDefault")
+    public SeatTypeEntity(@NonNull String seatTypeCode) {
         this.seatTypeCode = seatTypeCode;
-        this.seatTypeName = seatTypeName;
-        this.workerMemo = workerMemo;
+        this.seatTypeName = DEFAULT_SEAT_TYPE_NAME;
+        this.workerMemo = DEFAULT_WORKER_MEMO;
         this.deleted = false;
         this.isBooked = false;
     }

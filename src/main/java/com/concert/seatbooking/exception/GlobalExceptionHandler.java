@@ -10,17 +10,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BusinessException.class)
-    public String handleBusinessException(BusinessException ex, Model model, RedirectAttributes redirectAttributes) {
-        log.warn("Business exception occurred: {}", ex.getMessage());
-        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
-        return "redirect:/seat-types";
-    }
-
     @ExceptionHandler(Exception.class)
     public String handleGenericException(Exception ex, Model model) {
         log.error("Unexpected error occurred", ex);
         model.addAttribute("errorMessage", "An unexpected error occurred. Please try again.");
         return "error";
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public String handleSecurityException(ValidationException ex, Model model, RedirectAttributes redirectAttributes) {
+        log.warn("Business exception occurred: {}", ex.getMessage());
+        redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        return "redirect:/seat-types";
     }
 }
