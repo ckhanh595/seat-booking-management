@@ -3,6 +3,7 @@ package com.concert.seatbooking;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * Main application class for Concert Seat Booking Management System.
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @Slf4j
 @SpringBootApplication
+@EnableConfigurationProperties
 public class SeatBookingManagementApplication {
 
     public static void main(String[] args) {

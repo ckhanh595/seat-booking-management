@@ -28,11 +28,16 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
   
-  security:
-    user:
-      name: admin
-      password: admin
-      roles: ADMIN
+app:
+  admin:
+    username: ${ADMIN_USERNAME:admin@concert.com}
+    password: ${ADMIN_PASSWORD:Pwd@1234}
+  staff:
+    username: ${STAFF_USERNAME:staff@concert.com}
+    password: ${STAFF_PASSWORD:Pwd@1234}
+  customer:
+    username: ${CUSTOMER_USERNAME:customer@concert.com}
+    password: ${CUSTOMER_PASSWORD:Pwd@1234}
 
 logging:
   level:
