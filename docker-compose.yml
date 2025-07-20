@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Oracle Database Service
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    container_name: oracle-db
+    environment:
+      - ORACLE_PASSWORD=${ORACLE_PWD:-seat_booking}
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+      - ./docker/oracle-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "sqlplus", "-s", "sys/seat_booking@localhost:1521/XE", "as", "sysdba", "<<<", "select 1 from dual;"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Spring Boot Application Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: seat-booking-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DATABASE_HOST=oracle-db
+      - DATABASE_PORT=1521
+      - DATABASE_NAME=XE
+      - DATABASE_USER=seat_booking
+      - DATABASE_PASSWORD=seat_booking
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - STAFF_USERNAME=${STAFF_USERNAME}
+      - STAFF_PASSWORD=${STAFF_PASSWORD}
+      - CUSTOMER_USERNAME=${CUSTOMER_USERNAME}
+      - CUSTOMER_PASSWORD=${CUSTOMER_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  oracle_data:

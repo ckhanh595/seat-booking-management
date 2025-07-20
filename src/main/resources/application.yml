@@ -65,9 +65,9 @@ spring:
       on-profile: dev
   
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: seat_booking
-    password: seat_booking
+    url: jdbc:oracle:thin:@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}:${DATABASE_NAME:XE}
+    username: ${DATABASE_USER:seat_booking}
+    password: ${DATABASE_PASSWORD:seat_booking}
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 10
@@ -90,9 +90,9 @@ spring:
       on-profile: docker
   
   datasource:
-    url: jdbc:oracle:thin:@oracle-db:1521:XE
-    username: seat_booking
-    password: seat_booking
+    url: jdbc:oracle:thin:@${DATABASE_HOST:oracle-db}:${DATABASE_PORT:1521}/${DATABASE_NAME:XE}
+    username: ${DATABASE_USER:seat_booking}
+    password: ${DATABASE_PASSWORD:seat_booking}
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 20
@@ -114,9 +114,9 @@ spring:
   
   datasource:
     # TestContainers will override these values
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: test
-    password: test
+    url: jdbc:oracle:thin:@${DATABASE_HOST:localhost}:${DATABASE_PORT:1521}:${DATABASE_NAME:XE}
+    username: ${DATABASE_USER:test}
+    password: ${DATABASE_PASSWORD:test}
     driver-class-name: oracle.jdbc.OracleDriver
   
   jpa:
