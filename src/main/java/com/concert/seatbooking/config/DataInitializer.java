@@ -23,43 +23,43 @@ public class DataInitializer {
     @Transactional
     public void initializeData() {
         log.info("Starting data initialization for users...");
-        
+
         createUserIfNotExists(
-            appProperties.getAdmin().getUsername(),
-            appProperties.getAdmin().getPassword(),
-            "System Administrator",
-            UserRole.SUPER_ADMIN
+                appProperties.getAdmin().getUsername(),
+                appProperties.getAdmin().getPassword(),
+                "System Administrator",
+                UserRole.SUPER_ADMIN
         );
-        
+
         createUserIfNotExists(
-            appProperties.getStaff().getUsername(),
-            appProperties.getStaff().getPassword(),
-            "Staff Member",
-            UserRole.STAFF
+                appProperties.getStaff().getUsername(),
+                appProperties.getStaff().getPassword(),
+                "Staff Member",
+                UserRole.STAFF
         );
-        
+
         createUserIfNotExists(
-            appProperties.getCustomer().getUsername(),
-            appProperties.getCustomer().getPassword(),
-            "Customer User",
-            UserRole.CUSTOMER
+                appProperties.getCustomer().getUsername(),
+                appProperties.getCustomer().getPassword(),
+                "Customer User",
+                UserRole.CUSTOMER
         );
-        
+
         log.info("Data initialization completed successfully.");
     }
-    
+
     private void createUserIfNotExists(String username, String password, String fullName, UserRole role) {
         if (userRepository.findByUsername(username).isEmpty()) {
-            String encodedPassword = passwordEncoder.encode(password);
-            
-            UserEntity user = UserEntity.builder()
-                .username(username)
-                .password(encodedPassword)
-                .email(username)
-                .fullName(fullName)
-                .role(role)
-                .build();
-                
+            var encodedPassword = passwordEncoder.encode(password);
+
+            var user = UserEntity.builder()
+                    .username(username)
+                    .password(encodedPassword)
+                    .email(username)
+                    .fullName(fullName)
+                    .role(role)
+                    .build();
+
             userRepository.save(user);
             log.info("Created user: {} with role: {}", username, role);
         } else {

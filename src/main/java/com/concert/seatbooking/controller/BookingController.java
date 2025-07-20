@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static com.concert.seatbooking.constant.AppConstants.AVAILABLE_SEAT_TYPES;
+import static com.concert.seatbooking.constant.AppConstants.PAGE_TITLE;
+import static com.concert.seatbooking.constant.CommonMessage.BOOKING_ERROR;
+import static com.concert.seatbooking.constant.CommonMessage.ERROR_MESSAGE;
+import static com.concert.seatbooking.constant.CommonMessage.SEAT_BOOKED_SUCCESS;
+import static com.concert.seatbooking.constant.CommonMessage.SUCCESS_MESSAGE;
+import static com.concert.seatbooking.constant.PageConstants.BOOK_SEATS;
+import static com.concert.seatbooking.constant.ViewConstants.BOOKING_LIST;
+import static com.concert.seatbooking.constant.ViewConstants.REDIRECT_BOOK_SEATS;
+
 @Controller
 @RequestMapping("/book-seats")
 @RequiredArgsConstructor
@@ -26,10 +36,10 @@ public class BookingController {
     public String showBookingPage(Model model) {
         var availableSeatTypes = bookingService.getAvailableSeatTypes();
         
-        model.addAttribute("pageTitle", "Book Seats");
-        model.addAttribute("availableSeatTypes", availableSeatTypes);
+        model.addAttribute(PAGE_TITLE, BOOK_SEATS);
+        model.addAttribute(AVAILABLE_SEAT_TYPES, availableSeatTypes);
         
-        return "booking/list";
+        return BOOKING_LIST;
     }
 
     @PostMapping("/book/{seatTypeId}")
@@ -39,19 +49,17 @@ public class BookingController {
         try {
             bookingService.bookSeatType(seatTypeId, authentication);
             
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Seat type booked successfully! Thank you for your booking.");
+            redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE, SEAT_BOOKED_SUCCESS);
             
-            return "redirect:/book-seats";
+            return REDIRECT_BOOK_SEATS;
             
         } catch (ValidationException | NotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/book-seats";
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, e.getMessage());
+            return REDIRECT_BOOK_SEATS;
         } catch (Exception e) {
             log.error("Error booking seat type {} for user: {}", seatTypeId, authentication.getName(), e);
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "An error occurred while booking the seat type. Please try again.");
-            return "redirect:/book-seats";
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, BOOKING_ERROR);
+            return REDIRECT_BOOK_SEATS;
         }
     }
 }
