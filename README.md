@@ -13,31 +13,6 @@ A Spring Boot 3+ application for managing concert seat type patterns with CRUD o
 - **Docker** for containerization
 - **Flyway** for database migrations
 
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/concert/seatbooking/
-│   │   ├── config/          # Configuration classes
-│   │   ├── controller/      # Web controllers
-│   │   ├── domain/          # Domain entities
-│   │   ├── repository/      # Data repositories
-│   │   ├── service/         # Business services
-│   │   ├── exception/       # Custom exceptions
-│   │   ├── dto/             # Data Transfer Objects
-│   │   └── util/            # Utility classes
-│   └── resources/
-│       ├── templates/       # Thymeleaf templates
-│       ├── static/          # CSS, JS, Images
-│       └── db/migration/    # Flyway migration scripts
-└── test/
-    └── java/com/concert/seatbooking/
-        ├── integration/     # Integration tests
-        ├── unit/            # Unit tests
-        └── testcontainers/  # TestContainers setup
-```
-
 ## Features
 
 ### Core Functionality
@@ -74,21 +49,36 @@ mvn clean compile
 # Run tests
 mvn test
 
-# Package the application
+# Package the application (creates JAR file in target/ directory)
 mvn clean package
+
+# Skip tests during packaging (faster build)
+mvn clean package -DskipTests
 ```
 
 ### Running with Docker Compose
+
+The easiest way to run the complete application with database:
 
 ```bash
 # Start the application with Oracle database
 docker-compose up -d
 
+# View logs (optional)
+docker-compose logs -f app
+
 # Stop the application
 docker-compose down
+
+# Stop and remove volumes (clean slate)
+docker-compose down -v
 ```
 
-The application will be available at: http://localhost:8080
+**Important Notes:**
+- The Oracle database takes about 60 seconds to fully initialize on first startup
+- The application will automatically retry connection until database is ready
+- The application will be available at: http://localhost:8080
+- Database data persists in Docker volumes between restarts
 
 ### Running Locally
 
@@ -115,18 +105,29 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests (unit + integration)
 mvn test
 
-# Run only unit tests
-mvn test -Dtest="**/*Test"
+# Run only unit tests (located in src/test/java/**/unit/)
+mvn test -Dtest="**/unit/**/*Test"
 
-# Run only integration tests
-mvn test -Dtest="**/*IT"
+# Run only integration tests (located in src/test/java/**/integration/)
+mvn test -Dtest="**/integration/**/*Test"
 
-# Run with specific profile
-mvn test -Dspring.profiles.active=test
+# Run tests with coverage report
+mvn test jacoco:report
+
+# Run tests in a specific package
+mvn test -Dtest="com.concert.seatbooking.service.*"
+
+# Run a specific test class
+mvn test -Dtest="BookingServiceImplTest"
 ```
+
+**Test Types:**
+- **Unit Tests**: Fast tests that mock external dependencies (databases, web calls)
+- **Integration Tests**: Tests that use TestContainers to spin up real Oracle database
+- **Test Coverage**: Generated reports available in `target/site/jacoco/index.html` after running `mvn test jacoco:report`
 
 ## API Endpoints
 
